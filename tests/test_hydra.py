@@ -776,6 +776,7 @@ def test_multirun_rejects_swept_config_hydra_controller_config_override(
                 --resolve : Used in conjunction with --cfg, resolve config interpolations before printing.
                 --package,-p : Config package to show
                 --run,-r : Run a job
+                --tui : Open the terminal UI to explore configs and launch jobs (requires the hydra-tui plugin)
                 --multirun,-m : Run multiple jobs with the configured launcher and sweeper
                 --shell-completion,-sc : Install or Uninstall shell completion:
                     Bash - Install:
@@ -832,6 +833,7 @@ for details.
                 --resolve : Used in conjunction with --cfg, resolve config interpolations before printing.
                 --package,-p : Config package to show
                 --run,-r : Run a job
+                --tui : Open the terminal UI to explore configs and launch jobs (requires the hydra-tui plugin)
                 --multirun,-m : Run multiple jobs with the configured launcher and sweeper
                 --shell-completion,-sc : Install or Uninstall shell completion:
                     Bash - Install:

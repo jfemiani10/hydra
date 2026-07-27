@@ -372,11 +372,12 @@ def _run_hydra(
             + has_show_cfg
             + args.multirun
             + args.shell_completion
+            + args.tui
             + (args.info is not None)
         )
         if num_commands > 1:
             raise ValueError(
-                "Only one of --run, --multirun, --cfg, --info and --shell_completion can be specified"
+                "Only one of --run, --multirun, --cfg, --info, --tui and --shell_completion can be specified"
             )
         if num_commands == 0:
             args.run = True
@@ -408,6 +409,21 @@ def _run_hydra(
             run_and_report(
                 lambda: hydra.shell_completion(
                     config_name=config_name, overrides=args.overrides
+                )
+            )
+        elif args.tui:
+            try:
+                from hydra_plugins.hydra_tui import launch_tui
+            except ImportError as e:
+                raise ImportError(
+                    "--tui requires the hydra-tui plugin: pip install hydra-tui"
+                ) from e
+            run_and_report(
+                lambda: launch_tui(
+                    config_loader=hydra.config_loader,
+                    config_name=config_name,
+                    overrides=args.overrides,
+                    app_path=sys.argv[0],
                 )
             )
         elif args.info:
@@ -525,6 +541,13 @@ def get_args_parser() -> argparse.ArgumentParser:
     parser.add_argument("--package", "-p", help="Config package to show")
 
     parser.add_argument("--run", "-r", action="store_true", help="Run a job")
+
+    parser.add_argument(
+        "--tui",
+        action="store_true",
+        help="Open the terminal UI to explore configs and launch jobs"
+        " (requires the hydra-tui plugin)",
+    )
 
     parser.add_argument(
         "--multirun",

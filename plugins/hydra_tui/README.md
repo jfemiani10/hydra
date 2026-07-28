@@ -12,6 +12,18 @@ hydra from source **requires Java** — the config-override grammar is generated
 with ANTLR at build time (the jar itself is vendored in `build_helpers/bin/`).
 Check with `java -version`; install a JDK first if that fails.
 
+**Windows:** enable long paths first, or the clone fails partway through with
+`Filename too long`. Hydra has test fixtures with paths over the 260-character
+`MAX_PATH` limit:
+
+```bash
+git config --global core.longpaths true
+```
+
+(Cloning into a short directory such as `C:\src` also avoids it. If a clone
+already failed this way, fix the setting and run `git restore --source=HEAD :/`
+rather than re-cloning.)
+
 ```bash
 git clone -b tui https://github.com/jfemiani10/hydra.git
 cd hydra

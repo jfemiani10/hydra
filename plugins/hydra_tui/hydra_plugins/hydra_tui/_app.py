@@ -91,13 +91,28 @@ class HydraTUI(App):  # type: ignore[misc]
         self.in_defaults: Dict[str, bool] = {}
         for group in self.groups:
             opts = sorted(config_loader.get_group_options(group))
+            opts = self._hide_schema_configs(opts)
             chosen = self.choices.get(group)
+            if chosen is not None and chosen not in opts:
+                opts = [chosen, *opts]  # never hide what's actually selected
             self.in_defaults[group] = chosen is not None
             if chosen is None:
                 opts = [NONE, *opts]
                 chosen = NONE
             self.options[group] = opts
             self.selection[group] = chosen if chosen in opts else opts[0]
+
+    @staticmethod
+    def _hide_schema_configs(opts: List[str]) -> List[str]:
+        """Drop structured-config schemas from the picker.
+
+        Hydra's convention (and its own docs) is to register a group's schema in
+        that same group as ``base_<name>``, which makes it show up alongside the
+        real options. Those aren't meant to be selected, so hide them -- unless
+        that would empty the group, in which case show everything.
+        """
+        visible = [o for o in opts if not o.startswith("base_")]
+        return visible if visible else opts
 
     # --- composition ------------------------------------------------------
 
